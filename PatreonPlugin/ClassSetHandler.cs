@@ -16,6 +16,7 @@ namespace Smod.PatreonPlugin
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
 			SetPatreonItems(ev.Player, ev.TeamRole);
+			//PlayerJoinHandler.SetPatreonRoles(ev.Player, plugin); // For Blizzard
 		}
 
 		public void SetPatreonItems(Player player, TeamRole teamRole)

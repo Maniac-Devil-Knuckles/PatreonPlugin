@@ -1,7 +1,6 @@
 ﻿using Smod2.Commands;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace Smod.PatreonPlugin
 {
