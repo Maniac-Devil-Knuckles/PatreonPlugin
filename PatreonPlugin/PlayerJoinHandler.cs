@@ -33,7 +33,7 @@ namespace Smod.PatreonPlugin
 					{
 						string colour = patreon.CustomColour != null && !string.IsNullOrEmpty(patreon.CustomColour.Trim()) ? patreon.CustomColour : plugin.GetConfigString("patreon_tag_colour");
 						string tag = patreon.CustomTag != null && !string.IsNullOrEmpty(patreon.CustomTag.Trim()) ? patreon.CustomTag : plugin.GetConfigString("patreon_tag");
-						
+
 						player.SetRank(color: colour, text: tag);
 						break;
 					}

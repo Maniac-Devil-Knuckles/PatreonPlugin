@@ -4,7 +4,7 @@ using Smod2.Events;
 
 namespace Smod.PatreonPlugin
 {
-    class ClassSetHandler : IEventHandlerSetRole
+	class ClassSetHandler : IEventHandlerSetRole
 	{
 		private static PatreonPlugin plugin;
 
