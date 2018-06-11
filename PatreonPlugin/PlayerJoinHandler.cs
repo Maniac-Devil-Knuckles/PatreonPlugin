@@ -7,11 +7,11 @@ namespace Smod.PatreonPlugin
 {
 	class PlayerJoinHandler : IEventHandlerPlayerJoin
 	{
-		private PatreonPlugin plugin;
+		private static PatreonPlugin plugin;
 
 		public PlayerJoinHandler(PatreonPlugin plugin)
 		{
-			this.plugin = plugin;
+			PlayerJoinHandler.plugin = plugin;
 		}
 
 		public void OnPlayerJoin(PlayerJoinEvent ev)
@@ -29,9 +29,12 @@ namespace Smod.PatreonPlugin
 			{
 				foreach (Patreon patreon in patreonIDs)
 				{
-					if (!string.IsNullOrEmpty(player.SteamId) && patreon.SteamId.Equals(player.SteamId))
+					if (!string.IsNullOrEmpty(player.SteamId) && patreon.SteamId == player.SteamId)
 					{
-						player.SetRank(string.IsNullOrEmpty(patreon.CustomTag) ? plugin.GetConfigString("patreon_tag_colour") : patreon.CustomTag, string.IsNullOrEmpty(patreon.CustomColour) ? plugin.GetConfigString("patreon_tag") : patreon.CustomColour);
+						string colour = patreon.CustomColour != null && !string.IsNullOrEmpty(patreon.CustomColour.Trim()) ? patreon.CustomColour : plugin.GetConfigString("patreon_tag_colour");
+						string tag = patreon.CustomTag != null && !string.IsNullOrEmpty(patreon.CustomTag.Trim()) ? patreon.CustomTag : plugin.GetConfigString("patreon_tag");
+						
+						player.SetRank(color: colour, text: tag);
 						break;
 					}
 				}

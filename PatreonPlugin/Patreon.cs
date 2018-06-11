@@ -90,7 +90,7 @@ namespace Smod.PatreonPlugin
 				return null;
 			}
 
-			for (int i = 0; i < fileLine.Length - 17; i++)
+			for (int i = 0; i <= fileLine.Length - 17; i++)
 			{
 				string result = fileLine.Substring(i, 17);
 

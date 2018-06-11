@@ -6,11 +6,11 @@ namespace Smod.PatreonPlugin
 {
     class ClassSetHandler : IEventHandlerSetRole
 	{
-		private PatreonPlugin plugin;
+		private static PatreonPlugin plugin;
 
 		public ClassSetHandler(PatreonPlugin plugin)
 		{
-			this.plugin = plugin;
+			ClassSetHandler.plugin = plugin;
 		}
 
 		public void OnSetRole(PlayerSetRoleEvent ev)
@@ -27,7 +27,7 @@ namespace Smod.PatreonPlugin
 
 			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
 			{
-				if (patreon.SteamId.Equals(player.SteamId))
+				if (patreon.SteamId == player.SteamId)
 				{
 					foreach (string item in (patreon.CustomItems != null ? patreon.CustomItems.Split(',') : defaultItems))
 					{

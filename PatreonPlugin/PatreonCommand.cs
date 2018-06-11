@@ -90,7 +90,7 @@ namespace Smod.PatreonPlugin
 		{
 			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
 			{
-				if (steamID.Trim().Equals(patreon.SteamId))
+				if (steamID.Trim() == patreon.SteamId)
 				{
 					return true;
 				}
@@ -134,7 +134,7 @@ namespace Smod.PatreonPlugin
 				for (int i = 0; i < patreonIDs.Count; i++)
 				{
 					Patreon patreon = Patreon.FromString(patreonIDs[i]);
-					if (patreon != null && steamID.Trim().Equals(patreon.SteamId))
+					if (patreon != null && steamID.Trim() == patreon.SteamId)
 					{
 						patreonIDs.RemoveAt(i);
 					}
