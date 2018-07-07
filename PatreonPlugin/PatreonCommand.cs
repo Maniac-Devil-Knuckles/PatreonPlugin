@@ -6,13 +6,6 @@ namespace Smod.PatreonPlugin
 {
 	class PatreonCommand : ICommandHandler
 	{
-		private PatreonPlugin plugin;
-
-		public PatreonCommand(PatreonPlugin plugin)
-		{
-			this.plugin = plugin;
-		}
-
 		public string GetCommandDescription()
 		{
 			return "Adds or removes SteamIDs from the Patreon list";
@@ -152,7 +145,7 @@ namespace Smod.PatreonPlugin
 
 		public string RefreshPatreons()
 		{
-			PlayerJoinHandler.SetPatreonRoles(ServerMod2.API.SmodPlayer.GetPlayers().ToArray(), plugin);
+			PlayerJoinHandler.SetPatreonRoles(ServerMod2.API.SmodPlayer.GetPlayers().ToArray());
 
 			return Successes.RefreshPatreon;
 		}

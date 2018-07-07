@@ -12,13 +12,14 @@ namespace Smod.PatreonPlugin
 		name = "PatreonPlugin",
 		description = "A plugin to reward Patreon supporters",
 		id = "dankrushen.patreon",
-		version = "1.4",
+		version = "1.5",
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 0
+		SmodRevision = 5
 		)]
 	class PatreonPlugin : Plugin
 	{
+		public static PatreonPlugin singleton { get; private set; }
 		public static readonly string patreonFile = "PatreonList.txt";
 
 		public override void OnDisable()
@@ -30,20 +31,23 @@ namespace Smod.PatreonPlugin
 		{
 			CreateFile();
 
+			singleton = this;
+
 			this.Info(Details.name + " v" + Details.version + " has been enabled!");
 		}
 
 		public override void Register()
 		{
 			// Register Events
-			this.AddEventHandler(typeof(IEventHandlerSetRole), new ClassSetHandler(this), Priority.Normal);
-			this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler(this), Priority.Normal);
+			this.AddEventHandler(typeof(IEventHandlerSetRole), new ClassSetHandler(), Priority.Normal);
+			this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler(), Priority.Normal);
 			// Register config settings
-			this.AddConfig(new Smod2.Config.ConfigSetting("patreon_items", new string[] { }, Smod2.Config.SettingType.LIST, true, "The items to give Patreon supporters when they spawn"));
-			this.AddConfig(new Smod2.Config.ConfigSetting("patreon_tag", "", Smod2.Config.SettingType.STRING, true, "The tag to give Patreon supporters"));
-			this.AddConfig(new Smod2.Config.ConfigSetting("patreon_tag_colour", "default", Smod2.Config.SettingType.STRING, true, "The colour of the tag to give to Patreon supporters"));
+			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_ITEMS, new string[] { }, Smod2.Config.SettingType.LIST, true, "The items to give Patreon supporters when they spawn"));
+			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG, "", Smod2.Config.SettingType.STRING, true, "The tag to give Patreon supporters"));
+			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG_COLOUR, "default", Smod2.Config.SettingType.STRING, true, "The colour of the tag to give to Patreon supporters"));
+			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG_AUTO_REFRESH, false, Smod2.Config.SettingType.BOOL, true, "Whether to automaticaly refresh Patreon supporters tags every time their class is set"));
 			// Register commands
-			this.AddCommand("patreon", new PatreonCommand(this));
+			this.AddCommand("patreon", new PatreonCommand());
 		}
 
 		public static void CreateFile()

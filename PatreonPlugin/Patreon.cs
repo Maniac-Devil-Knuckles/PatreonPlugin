@@ -6,20 +6,26 @@ namespace Smod.PatreonPlugin
 	class Patreon
 	{
 		public string SteamId { get; }
-		public string CustomTag { get; }
-		public string CustomColour { get; }
-		public string CustomItems { get; }
+		public string Tag { get; }
+		public string Colour { get; }
+		public string Items { get; }
+		public bool AutoRefresh { get; }
+		public string Rank { get; }
 
-		public Patreon(string steamId, string customTag = null, string customColour = null, string customItems = null)
+		public Patreon(string steamId, string tag = null, string colour = null, string items = null, bool autoRefresh = false, string rank = null)
 		{
 			SteamId = steamId;
-			CustomTag = customTag;
-			CustomColour = customColour;
-			CustomItems = customItems;
+			Tag = tag;
+			Colour = colour;
+			Items = items;
+			AutoRefresh = autoRefresh;
+			Rank = rank;
 		}
 
 		private static readonly string optionRegex = "(\\s|^)({0})(\\s?=\\s?|\\s)(\"[^\"]+\"|[^\\s\"]+)";
 		private static readonly string optionOptionRegex = "\\s*({0})(\\s?=\\s?|\\s)";
+
+		private static readonly string tagOnlyRegex = "(\\s|^)({0})(?=\\s|$)"; // For example: "SteamID -a -c "blue""
 
 		private static readonly string tagTags = "-t|--tag|--customtag|--custom";
 		private static readonly Regex tagRegex = new Regex(String.Format(optionRegex, tagTags));
@@ -32,6 +38,13 @@ namespace Smod.PatreonPlugin
 		private static readonly string itemTags = "-i|--items|--customitems";
 		private static readonly Regex itemsRegex = new Regex(String.Format(optionRegex, itemTags));
 		private static readonly Regex itemsOptionRegex = new Regex(String.Format(optionOptionRegex, itemTags));
+
+		private static readonly string autoRefreshTags = "-a|--auto|--autorefresh";
+		private static readonly Regex autoRefreshRegex = new Regex(String.Format(tagOnlyRegex, itemTags));
+
+		private static readonly string rankTags = "-r|--rank";
+		private static readonly Regex rankRegex = new Regex(String.Format(optionRegex, rankTags));
+		private static readonly Regex rankOptionRegex = new Regex(String.Format(optionOptionRegex, rankTags));
 
 		public static Patreon FromString(string fileLine)
 		{
@@ -48,11 +61,35 @@ namespace Smod.PatreonPlugin
 			string tagTagValue = MatchOption(fileLine, tagRegex, tagOptionRegex);
 			string colourTagValue = MatchOption(fileLine, colourRegex, colourOptionRegex);
 			string itemTagValue = MatchOption(fileLine, itemsRegex, itemsOptionRegex);
+			bool autoRefreshTags = MatchFlag(fileLine, autoRefreshRegex);
+			string rankTagValue = MatchOption(fileLine, rankRegex, rankOptionRegex);
 
 			string steam64Match = FindFirstSteamID(fileLine);
 			if (!string.IsNullOrEmpty(steam64Match))
 			{
-				return new Patreon(steam64Match, tagTagValue, colourTagValue, itemTagValue);
+				// Set from default or rank values
+				if (tagTagValue == null)
+				{
+					tagTagValue = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_TAG_COLOUR, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConfig(ConfigOptions.PATREON_TAG_COLOUR, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(ConfigOptions.PATREON_TAG_COLOUR);
+				}
+
+				if (colourTagValue == null)
+				{
+					colourTagValue = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_TAG, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConfig(ConfigOptions.RANK_TAG, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(ConfigOptions.PATREON_TAG);
+				}
+
+				if (itemTagValue == null)
+				{
+					itemTagValue = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_ITEMS, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConfig(ConfigOptions.RANK_ITEMS, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(ConfigOptions.PATREON_ITEMS);
+				}
+
+				if (!autoRefreshTags)
+				{
+					autoRefreshTags = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_TAG_AUTO_REFRESH, rankTagValue) ? ConfigFile.GetBool(ConfigOptions.GetRankConfig(ConfigOptions.RANK_TAG_AUTO_REFRESH, rankTagValue)) : PatreonPlugin.singleton.GetConfigBool(ConfigOptions.PATREON_TAG_AUTO_REFRESH);
+				}
+
+				// Return new instance with values
+				return new Patreon(steam64Match, tagTagValue, colourTagValue, itemTagValue, autoRefreshTags, rankTagValue);
 			}
 			else
 			{
@@ -81,6 +118,12 @@ namespace Smod.PatreonPlugin
 			}
 
 			return null;
+		}
+
+		public static bool MatchFlag(string fileLine, Regex flagRegex)
+		{
+			Match flagMatch = flagRegex.Match(fileLine);
+			return flagMatch.Success;
 		}
 
 		public static string FindFirstSteamID(string fileLine)

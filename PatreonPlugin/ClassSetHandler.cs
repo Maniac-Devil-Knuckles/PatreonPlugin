@@ -6,30 +6,29 @@ namespace Smod.PatreonPlugin
 {
 	class ClassSetHandler : IEventHandlerSetRole
 	{
-		private static PatreonPlugin plugin;
-
-		public ClassSetHandler(PatreonPlugin plugin)
-		{
-			ClassSetHandler.plugin = plugin;
-		}
-
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
 			SetPatreonItems(ev.Player, ev.TeamRole);
-			//PlayerJoinHandler.SetPatreonRoles(ev.Player, plugin); // For Blizzard
+
+			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
+			{
+				if (patreon.SteamId == ev.Player.SteamId && patreon.AutoRefresh)
+				{
+					PlayerJoinHandler.SetPatreonRoles(ev.Player);
+					break;
+				}
+			}
 		}
 
 		public void SetPatreonItems(Player player, TeamRole teamRole)
 		{
 			PatreonPlugin.CreateFile();
 
-			string[] defaultItems = plugin.GetConfigList("patreon_items");
-
 			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
 			{
 				if (patreon.SteamId == player.SteamId)
 				{
-					foreach (string item in (patreon.CustomItems != null ? patreon.CustomItems.Split(',') : defaultItems))
+					foreach (string item in patreon.Items.Split(','))
 					{
 						string[] split = item.Trim().Split(new char[] { ':' }, 2);
 
@@ -45,11 +44,11 @@ namespace Smod.PatreonPlugin
 						}
 						else if (split.Length >= 2)
 						{
-							plugin.Error(string.Format(Errors.IntegerParse, item));
+							PatreonPlugin.singleton.Error(string.Format(Errors.IntegerParse, item));
 						}
 						else
 						{
-							plugin.Error(string.Format(Errors.MissingSplitChar, item));
+							PatreonPlugin.singleton.Error(string.Format(Errors.MissingSplitChar, item));
 						}
 					}
 				}

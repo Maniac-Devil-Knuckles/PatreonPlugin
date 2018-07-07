@@ -7,20 +7,15 @@ namespace Smod.PatreonPlugin
 {
 	class PlayerJoinHandler : IEventHandlerPlayerJoin
 	{
-		private static PatreonPlugin plugin;
-
-		public PlayerJoinHandler(PatreonPlugin plugin)
-		{
-			PlayerJoinHandler.plugin = plugin;
-		}
-
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			SetPatreonRoles(ev.Player, plugin);
+			SetPatreonRoles(ev.Player);
 		}
 
-		public static void SetPatreonRoles(Player[] players, PatreonPlugin plugin)
+		public static void SetPatreonRoles(Player[] players)
 		{
+			PatreonPlugin plugin = PatreonPlugin.singleton;
+
 			PatreonPlugin.CreateFile();
 
 			List<Patreon> patreonIDs = PatreonPlugin.GetPatreons();
@@ -31,19 +26,16 @@ namespace Smod.PatreonPlugin
 				{
 					if (!string.IsNullOrEmpty(player.SteamId) && patreon.SteamId == player.SteamId)
 					{
-						string colour = patreon.CustomColour != null && !string.IsNullOrEmpty(patreon.CustomColour.Trim()) ? patreon.CustomColour : plugin.GetConfigString("patreon_tag_colour");
-						string tag = patreon.CustomTag != null && !string.IsNullOrEmpty(patreon.CustomTag.Trim()) ? patreon.CustomTag : plugin.GetConfigString("patreon_tag");
-
-						player.SetRank(color: colour, text: tag);
+						player.SetRank(color: patreon.Colour, text: patreon.Tag);
 						break;
 					}
 				}
 			}
 		}
 
-		public static void SetPatreonRoles(Player player, PatreonPlugin plugin)
+		public static void SetPatreonRoles(Player player)
 		{
-			SetPatreonRoles(new Player[] { player }, plugin);
+			SetPatreonRoles(new Player[] { player });
 		}
 	}
 }
