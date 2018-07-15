@@ -70,22 +70,30 @@ namespace Smod.PatreonPlugin
 				// Set from default or rank values
 				if (tagTagValue == null)
 				{
-					tagTagValue = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_TAG_COLOUR, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConfig(ConfigOptions.PATREON_TAG_COLOUR, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(ConfigOptions.PATREON_TAG_COLOUR);
+					string rankConf = ConfigOptions.RANK_TAG_COLOUR;
+					string defConf = ConfigOptions.PATREON_TAG_COLOUR;
+					tagTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(defConf);
 				}
 
 				if (colourTagValue == null)
 				{
-					colourTagValue = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_TAG, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConfig(ConfigOptions.RANK_TAG, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(ConfigOptions.PATREON_TAG);
+					string rankConf = ConfigOptions.RANK_TAG;
+					string defConf = ConfigOptions.PATREON_TAG;
+					colourTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(defConf);
 				}
 
 				if (itemTagValue == null)
 				{
-					itemTagValue = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_ITEMS, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConfig(ConfigOptions.RANK_ITEMS, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(ConfigOptions.PATREON_ITEMS);
+					string rankConf = ConfigOptions.RANK_ITEMS;
+					string defConf = ConfigOptions.PATREON_ITEMS;
+					itemTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(defConf);
 				}
 
 				if (!autoRefreshTags)
 				{
-					autoRefreshTags = !string.IsNullOrEmpty(rankTagValue) && ConfigOptions.ContainsRank(ConfigOptions.RANK_TAG_AUTO_REFRESH, rankTagValue) ? ConfigFile.GetBool(ConfigOptions.GetRankConfig(ConfigOptions.RANK_TAG_AUTO_REFRESH, rankTagValue)) : PatreonPlugin.singleton.GetConfigBool(ConfigOptions.PATREON_TAG_AUTO_REFRESH);
+					string rankConf = ConfigOptions.RANK_TAG_AUTO_REFRESH;
+					string defConf = ConfigOptions.PATREON_TAG_AUTO_REFRESH;
+					autoRefreshTags = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetBool(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigBool(defConf);
 				}
 
 				// Return new instance with values

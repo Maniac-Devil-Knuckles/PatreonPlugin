@@ -14,10 +14,10 @@
 
 		public static bool ContainsRank(string rankConfigString, string rank)
 		{
-			return !string.IsNullOrEmpty(rank) && ConfigFile.Contains(string.Format(rankConfigString, rank));
+			return !string.IsNullOrEmpty(rank) && !string.IsNullOrEmpty(ConfigFile.GetString(string.Format(rankConfigString, rank)));
 		}
 
-		public static string GetRankConfig(string rankConfigString, string rank)
+		public static string GetRankConf(string rankConfigString, string rank)
 		{
 			return string.Format(rankConfigString, rank);
 		}
