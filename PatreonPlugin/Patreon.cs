@@ -70,16 +70,20 @@ namespace Smod.PatreonPlugin
 				// Set from default or rank values
 				if (tagTagValue == null)
 				{
-					string rankConf = ConfigOptions.RANK_TAG_COLOUR;
-					string defConf = ConfigOptions.PATREON_TAG_COLOUR;
+					string rankConf = ConfigOptions.RANK_TAG;
+					string defConf = ConfigOptions.PATREON_TAG;
 					tagTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(defConf);
+
+					PatreonPlugin.singleton.Debug("No custom tag value, using default tag from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + tagTagValue + "\"");
 				}
 
 				if (colourTagValue == null)
 				{
-					string rankConf = ConfigOptions.RANK_TAG;
-					string defConf = ConfigOptions.PATREON_TAG;
+					string rankConf = ConfigOptions.RANK_TAG_COLOUR;
+					string defConf = ConfigOptions.PATREON_TAG_COLOUR;
 					colourTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(defConf);
+
+					PatreonPlugin.singleton.Debug("No custom colour value, using default colour from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + colourTagValue + "\"");
 				}
 
 				if (itemTagValue == null)
@@ -87,6 +91,8 @@ namespace Smod.PatreonPlugin
 					string rankConf = ConfigOptions.RANK_ITEMS;
 					string defConf = ConfigOptions.PATREON_ITEMS;
 					itemTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigString(defConf);
+
+					PatreonPlugin.singleton.Debug("No custom items value, using default items from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + itemTagValue + "\"");
 				}
 
 				if (!autoRefreshTags)
@@ -94,6 +100,8 @@ namespace Smod.PatreonPlugin
 					string rankConf = ConfigOptions.RANK_TAG_AUTO_REFRESH;
 					string defConf = ConfigOptions.PATREON_TAG_AUTO_REFRESH;
 					autoRefreshTags = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetBool(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.singleton.GetConfigBool(defConf);
+
+					PatreonPlugin.singleton.Debug("No custom autorefresh value, using default autorefresh from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + autoRefreshTags + "\"");
 				}
 
 				// Return new instance with values
