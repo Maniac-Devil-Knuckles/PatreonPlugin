@@ -40,7 +40,7 @@ namespace Smod.PatreonPlugin
 		private static readonly Regex itemsOptionRegex = new Regex(String.Format(optionOptionRegex, itemTags));
 
 		private static readonly string autoRefreshTags = "-a|--auto|--autorefresh";
-		private static readonly Regex autoRefreshRegex = new Regex(String.Format(tagOnlyRegex, itemTags));
+		private static readonly Regex autoRefreshRegex = new Regex(String.Format(tagOnlyRegex, autoRefreshTags));
 
 		private static readonly string rankTags = "-r|--rank";
 		private static readonly Regex rankRegex = new Regex(String.Format(optionRegex, rankTags));
