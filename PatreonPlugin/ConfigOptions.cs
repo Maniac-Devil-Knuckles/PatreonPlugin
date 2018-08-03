@@ -1,6 +1,6 @@
 ﻿namespace Smod.PatreonPlugin
 {
-	class ConfigOptions
+	static class ConfigOptions
 	{
 		public readonly static string PATREON_ITEMS = "patreon_items";
 		public readonly static string PATREON_TAG = "patreon_tag";
@@ -16,7 +16,7 @@
 
 		public static bool ContainsRank(string rankConfigString, string rank)
 		{
-			return !string.IsNullOrEmpty(rank) && !string.IsNullOrEmpty(ConfigFile.GetString(string.Format(rankConfigString, rank), null));
+			return !string.IsNullOrEmpty(rank) && ConfigFile.GetString(string.Format(rankConfigString, rank), null) != null;
 		}
 
 		public static string GetRankConf(string rankConfigString, string rank)
