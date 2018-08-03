@@ -16,7 +16,7 @@
 
 		public static bool ContainsRank(string rankConfigString, string rank)
 		{
-			return !string.IsNullOrEmpty(rank) && !string.IsNullOrEmpty(ConfigFile.GetString(string.Format(rankConfigString, rank)));
+			return !string.IsNullOrEmpty(rank) && !string.IsNullOrEmpty(ConfigFile.GetString(string.Format(rankConfigString, rank), null));
 		}
 
 		public static string GetRankConf(string rankConfigString, string rank)
