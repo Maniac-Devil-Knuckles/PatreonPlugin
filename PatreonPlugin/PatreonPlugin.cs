@@ -12,10 +12,10 @@ namespace Smod.PatreonPlugin
 		name = "PatreonPlugin",
 		description = "A plugin to reward Patreon supporters",
 		id = "dankrushen.patreon",
-		version = "1.5",
+		version = "1.6",
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 9
+		SmodRevision = 10
 		)]
 	class PatreonPlugin : Plugin
 	{
@@ -46,6 +46,7 @@ namespace Smod.PatreonPlugin
 			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG, "", Smod2.Config.SettingType.STRING, true, "The tag to give Patreon supporters"));
 			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG_COLOUR, "default", Smod2.Config.SettingType.STRING, true, "The colour of the tag to give to Patreon supporters"));
 			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG_AUTO_REFRESH, false, Smod2.Config.SettingType.BOOL, true, "Whether to automaticaly refresh Patreon supporters tags every time their class is set"));
+			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_AUTO_RESERVE, false, Smod2.Config.SettingType.BOOL, true, "Whether to automaticaly make reserved slots for Patreon supporters"));
 			// Register commands
 			this.AddCommand("patreon", new PatreonCommand());
 		}

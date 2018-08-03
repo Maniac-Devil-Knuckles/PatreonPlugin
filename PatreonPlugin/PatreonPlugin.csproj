@@ -38,6 +38,7 @@
     <Compile Include="ClassSetHandler.cs" />
     <Compile Include="PatreonPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReservedSlotManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">

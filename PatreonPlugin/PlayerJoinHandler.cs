@@ -10,6 +10,7 @@ namespace Smod.PatreonPlugin
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
 			SetPatreonRoles(ev.Player);
+			ReservedSlotManager.UpdateReservedSlot(ev.Player);
 		}
 
 		public static void SetPatreonRoles(Player[] players)
