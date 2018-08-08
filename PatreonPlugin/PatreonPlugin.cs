@@ -15,7 +15,7 @@ namespace Smod.PatreonPlugin
 		version = "1.6",
 		SmodMajor = 3,
 		SmodMinor = 1,
-		SmodRevision = 10
+		SmodRevision = 11
 		)]
 	class PatreonPlugin : Plugin
 	{
