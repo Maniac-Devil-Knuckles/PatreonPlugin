@@ -1,6 +1,7 @@
 ﻿using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
+using System.Collections.Generic;
 
 namespace Smod.PatreonPlugin
 {
@@ -8,7 +9,8 @@ namespace Smod.PatreonPlugin
 	{
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
-			SetPatreonItems(ev.Player, ev.TeamRole);
+			ev.Items.AddRange(GetPatreonItems(ev.Player, ev.TeamRole));
+			//SetPatreonItems(ev.Player, ev.TeamRole);
 
 			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
 			{
@@ -20,6 +22,7 @@ namespace Smod.PatreonPlugin
 			}
 		}
 
+		[System.Obsolete("SetPatreonItems is deprecated, please use GetPatreonItems instead.", true)]
 		public void SetPatreonItems(Player player, TeamRole teamRole)
 		{
 			PatreonPlugin.CreateFile();
@@ -43,6 +46,7 @@ namespace Smod.PatreonPlugin
 								if (((int)teamRole.Role == charClass || charClass < 0) && !teamRole.Team.Equals(Team.RIP) && !teamRole.Team.Equals(Team.SCP))
 								{
 									player.GiveItem((ItemType)classItem);
+
 								}
 							}
 							else if (split.Length >= 2)
@@ -57,6 +61,49 @@ namespace Smod.PatreonPlugin
 					}
 				}
 			}
+		}
+
+		public ItemType[] GetPatreonItems(Player player, TeamRole teamRole)
+		{
+			PatreonPlugin.CreateFile();
+
+			List<ItemType> items = new List<ItemType>();
+
+			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
+			{
+				if (patreon.SteamId == player.SteamId)
+				{
+					if (!string.IsNullOrEmpty(patreon.Items))
+					{
+						foreach (string item in patreon.Items.Split(','))
+						{
+
+							string[] split = item.Trim().Split(new char[] { ':' }, 2);
+
+							int charClass;
+							int classItem;
+
+							if (split.Length >= 2 && int.TryParse(split[0].Trim(), out charClass) && int.TryParse(split[1].Trim(), out classItem))
+							{
+								if (((int)teamRole.Role == charClass || charClass < 0) && !teamRole.Team.Equals(Team.RIP) && !teamRole.Team.Equals(Team.SCP))
+								{
+									items.Add((ItemType)classItem);
+								}
+							}
+							else if (split.Length >= 2)
+							{
+								PatreonPlugin.singleton.Error(string.Format(Errors.IntegerParse, item));
+							}
+							else
+							{
+								PatreonPlugin.singleton.Error(string.Format(Errors.MissingSplitChar, item));
+							}
+						}
+					}
+				}
+			}
+
+			return items.ToArray();
 		}
 	}
 }
