@@ -12,7 +12,7 @@ namespace Smod.PatreonPlugin
 		name = "PatreonPlugin",
 		description = "A plugin to reward Patreon supporters",
 		id = "dankrushen.patreon",
-		version = "1.7",
+		version = "1.8",
 		SmodMajor = 3,
 		SmodMinor = 1,
 		SmodRevision = 17

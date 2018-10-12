@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using ServerMod2;
 using Smod2.API;
 
 namespace Smod.PatreonPlugin
