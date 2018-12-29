@@ -7,10 +7,11 @@
     <ProjectGuid>{0952A53A-A70E-4DAA-86A6-6560F2F3607B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Smod.PatreonPlugin</RootNamespace>
+    <RootNamespace>Dankrushen.PatreonPlugin</RootNamespace>
     <AssemblyName>PatreonPlugin</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,11 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ConfigOptions.cs" />
     <Compile Include="Messages.cs" />
-    <Compile Include="Patreon.cs" />
+    <Compile Include="Patron.cs" />
     <Compile Include="PatreonCommand.cs" />
     <Compile Include="PlayerJoinHandler.cs" />
     <Compile Include="ClassSetHandler.cs" />

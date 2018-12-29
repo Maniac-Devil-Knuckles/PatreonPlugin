@@ -1,42 +1,39 @@
-﻿using Smod2.API;
+﻿using System.Collections.Generic;
+using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
-using System.Collections.Generic;
 
-namespace Smod.PatreonPlugin
+namespace Dankrushen.PatreonPlugin
 {
-	class PlayerJoinHandler : IEventHandlerPlayerJoin
+	public class PlayerJoinHandler : IEventHandlerPlayerJoin
 	{
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			SetPatreonRoles(ev.Player);
+			SetPatronRoles(ev.Player);
 			ReservedSlotManager.UpdateReservedSlot(ev.Player);
 		}
 
-		public static void SetPatreonRoles(Player[] players)
+		public static void SetPatronRoles(Player[] players)
 		{
-			PatreonPlugin plugin = PatreonPlugin.singleton;
-
 			PatreonPlugin.CreateFile();
 
-			List<Patreon> patreonIDs = PatreonPlugin.GetPatreons();
+			List<Patron> patronIds = PatreonPlugin.GetPatrons();
 
 			foreach (Player player in players)
 			{
-				foreach (Patreon patreon in patreonIDs)
+				foreach (Patron patron in patronIds)
 				{
-					if (!string.IsNullOrEmpty(player.SteamId) && patreon.SteamId == player.SteamId)
-					{
-						player.SetRank(color: patreon.Colour, text: patreon.Tag);
-						break;
-					}
+					if (string.IsNullOrEmpty(player.SteamId) || patron.SteamId != player.SteamId) continue;
+
+					player.SetRank(patron.Colour, patron.Tag);
+					break;
 				}
 			}
 		}
 
-		public static void SetPatreonRoles(Player player)
+		public static void SetPatronRoles(Player player)
 		{
-			SetPatreonRoles(new Player[] { player });
+			SetPatronRoles(new[] { player });
 		}
 	}
 }

@@ -1,19 +1,20 @@
-﻿using Smod2.Commands;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Smod2.Commands;
 
-namespace Smod.PatreonPlugin
+namespace Dankrushen.PatreonPlugin
 {
-	class PatreonCommand : ICommandHandler
+	public class PatreonCommand : ICommandHandler
 	{
 		public string GetCommandDescription()
 		{
-			return "Adds or removes SteamIDs from the Patreon list";
+			return "Adds or removes SteamIDs from the Patreon supporter list";
 		}
 
 		public string GetUsage()
 		{
-			return "PATREON <ADD / REMOVE / REFRESH> [SteamID]";
+			return "PATREON <ADD <FILE LINE> / REMOVE <STEAMID64> / REFRESH>";
 		}
 
 		public string[] OnCall(ICommandSender sender, string[] args)
@@ -29,14 +30,8 @@ namespace Smod.PatreonPlugin
 					case "add":
 						if (args.Length >= 2)
 						{
-							if (IsSteamID(args[1]))
-							{
-								output.Add(AddPatreon(args[1].Trim()));
-							}
-							else
-							{
-								output.Add(Errors.InvalidSteamId);
-							}
+							string entry = string.Join(" ", args.Skip(1)).Trim();
+							output.Add(IsValidEntry(entry) ? AddPatron(entry) : Errors.InvalidSteamId);
 						}
 						else
 						{
@@ -47,14 +42,7 @@ namespace Smod.PatreonPlugin
 					case "remove":
 						if (args.Length >= 2)
 						{
-							if (IsSteamID(args[1]))
-							{
-								output.Add(RemovePatreon(args[1].Trim()));
-							}
-							else
-							{
-								output.Add(Errors.InvalidSteamId);
-							}
+							output.Add(IsSteamId(args[1]) ? RemovePatron(args[1].Trim()) : Errors.InvalidSteamId);
 						}
 						else
 						{
@@ -63,7 +51,7 @@ namespace Smod.PatreonPlugin
 						break;
 
 					case "refresh":
-						output.Add(RefreshPatreons());
+						output.Add(RefreshPatrons());
 						break;
 
 					default:
@@ -79,11 +67,19 @@ namespace Smod.PatreonPlugin
 			return output.ToArray();
 		}
 
-		public bool HasPatreon(string steamID)
+		public bool IsValidEntry(string entry)
 		{
-			foreach (Patreon patreon in PatreonPlugin.GetPatreons())
+			return Patron.FromString(entry) != null;
+		}
+
+		public bool HasSteamId(string steamId)
+		{
+			if (string.IsNullOrEmpty(steamId))
+				return false;
+
+			foreach (Patron patron in PatreonPlugin.GetPatrons())
 			{
-				if (steamID.Trim() == patreon.SteamId)
+				if (steamId.Trim() == patron.SteamId)
 				{
 					return true;
 				}
@@ -92,65 +88,69 @@ namespace Smod.PatreonPlugin
 			return false;
 		}
 
-		public string AddPatreon(string steamID)
+		public bool HasSteamId(Patron patron)
 		{
-			string curText = File.ReadAllText(PatreonPlugin.patreonFile);
+			return patron != null && HasSteamId(patron.SteamId);
+		}
+
+		public string AddPatron(string entry)
+		{
+			string curText = File.ReadAllText(PatreonPlugin.PatronFile);
 			if (!string.IsNullOrEmpty(curText.Trim()) && !curText.EndsWith(System.Environment.NewLine))
 			{
-				File.AppendAllText(PatreonPlugin.patreonFile, System.Environment.NewLine);
+				File.AppendAllText(PatreonPlugin.PatronFile, System.Environment.NewLine);
 			}
 
-			if (!HasPatreon(steamID))
-			{
-				if (!string.IsNullOrEmpty(curText.Trim()))
-				{
-					File.AppendAllText(PatreonPlugin.patreonFile, steamID + System.Environment.NewLine);
-				}
-				else
-				{
-					File.WriteAllText(PatreonPlugin.patreonFile, steamID + System.Environment.NewLine);
-				}
-				return string.Format(Successes.AddPatreon, steamID);
-			}
-			else
-			{
+			Patron newPatron = Patron.FromString(entry);
+
+			if (newPatron == null)
+				return Errors.InvalidSteamId;
+
+			if (HasSteamId(newPatron))
 				return Errors.SteamIdOnList;
-			}
-		}
 
-		public string RemovePatreon(string steamID)
-		{
-			if (HasPatreon(steamID))
+			if (!string.IsNullOrEmpty(curText.Trim()))
 			{
-				List<string> patreonIDs = new List<string>(File.ReadAllLines(PatreonPlugin.patreonFile));
-
-				for (int i = 0; i < patreonIDs.Count; i++)
-				{
-					Patreon patreon = Patreon.FromString(patreonIDs[i]);
-					if (patreon != null && steamID.Trim() == patreon.SteamId)
-					{
-						patreonIDs.RemoveAt(i);
-					}
-				}
-
-				File.WriteAllLines(PatreonPlugin.patreonFile, patreonIDs.ToArray());
-
-				return string.Format(Successes.RemovePatreon, steamID);
+				File.AppendAllText(PatreonPlugin.PatronFile, entry + System.Environment.NewLine);
 			}
 			else
 			{
-				return Errors.SteamIdNotOnList;
+				File.WriteAllText(PatreonPlugin.PatronFile, entry + System.Environment.NewLine);
 			}
+
+			return string.Format(Successes.AddPatron, newPatron.SteamId);
 		}
 
-		public string RefreshPatreons()
+		public string RemovePatron(string steamId)
 		{
-			PlayerJoinHandler.SetPatreonRoles(ServerMod2.API.SmodPlayer.GetPlayers().ToArray());
+			if (!HasSteamId(steamId))
+				return Errors.SteamIdNotOnList;
 
-			return Successes.RefreshPatreon;
+			List<string> patronIds = new List<string>(File.ReadAllLines(PatreonPlugin.PatronFile));
+
+			for (int i = 0; i < patronIds.Count; i++)
+			{
+				Patron patron = Patron.FromString(patronIds[i]);
+				if (patron != null && steamId.Trim() == patron.SteamId)
+				{
+					patronIds.RemoveAt(i);
+				}
+			}
+
+			File.WriteAllLines(PatreonPlugin.PatronFile, patronIds.ToArray());
+
+			return string.Format(Successes.RemovePatron, steamId);
+
 		}
 
-		public static bool IsSteamID(string input)
+		public string RefreshPatrons()
+		{
+			PlayerJoinHandler.SetPatronRoles(ServerMod2.API.SmodPlayer.GetPlayers().ToArray());
+
+			return Successes.RefreshPatron;
+		}
+
+		public static bool IsSteamId(string input)
 		{
 			if (string.IsNullOrEmpty(input))
 			{

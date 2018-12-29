@@ -1,80 +1,79 @@
-﻿using Smod2;
+﻿using System.Collections.Generic;
+using System.IO;
+using Smod2;
 using Smod2.Attributes;
 using Smod2.EventHandlers;
-using Smod2.Events;
-using System.Collections.Generic;
-using System.IO;
 
-namespace Smod.PatreonPlugin
+namespace Dankrushen.PatreonPlugin
 {
 	[PluginDetails(
 		author = "Dankrushen",
 		name = "PatreonPlugin",
 		description = "A plugin to reward Patreon supporters",
 		id = "dankrushen.patreon",
-		version = "1.8",
+		version = "1.9",
 		SmodMajor = 3,
-		SmodMinor = 1,
-		SmodRevision = 17
+		SmodMinor = 2,
+		SmodRevision = 0
 		)]
-	class PatreonPlugin : Plugin
+	public class PatreonPlugin : Plugin
 	{
-		public static PatreonPlugin singleton { get; private set; }
-		public static readonly string patreonFile = "PatreonList.txt";
+		public static PatreonPlugin Singleton { get; private set; }
+		public static string PatronFile = FileManager.GetAppFolder(true) + "PatronList.txt";
 
 		public override void OnDisable()
 		{
-			this.Info(Details.name + " v" + Details.version + " has been disabled!");
+			Info(Details.name + " v" + Details.version + " has been disabled!");
 		}
 
 		public override void OnEnable()
 		{
 			CreateFile();
 
-			singleton = this;
+			Singleton = this;
 
-			this.Info(Details.name + " v" + Details.version + " has been enabled!");
+			Info(Details.name + " v" + Details.version + " has been enabled!");
 		}
 
 		public override void Register()
 		{
 			// Register Events
-			this.AddEventHandler(typeof(IEventHandlerSetRole), new ClassSetHandler(), Priority.Normal);
-			this.AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler(), Priority.Normal);
+			AddEventHandler(typeof(IEventHandlerSetRole), new ClassSetHandler());
+			AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler());
 			// Register config settings
-			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_ITEMS, "", Smod2.Config.SettingType.STRING, true, "The items to give Patreon supporters when they spawn"));
-			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG, "", Smod2.Config.SettingType.STRING, true, "The tag to give Patreon supporters"));
-			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG_COLOUR, "default", Smod2.Config.SettingType.STRING, true, "The colour of the tag to give to Patreon supporters"));
-			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_TAG_AUTO_REFRESH, false, Smod2.Config.SettingType.BOOL, true, "Whether to automaticaly refresh Patreon supporters tags every time their class is set"));
-			this.AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PATREON_AUTO_RESERVE, false, Smod2.Config.SettingType.BOOL, true, "Whether to automaticaly make reserved slots for Patreon supporters"));
+			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonItems, "", Smod2.Config.SettingType.STRING, true, "The items to give Patreon supporters when they spawn"));
+			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonTag, "", Smod2.Config.SettingType.STRING, true, "The tag to give Patreon supporters"));
+			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonTagColour, "default", Smod2.Config.SettingType.STRING, true, "The colour of the tag to give to Patreon supporters"));
+			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonTagAutoRefresh, false, Smod2.Config.SettingType.BOOL, true, "Whether to automatically refresh Patreon supporters tags every time their class is set"));
+			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonAutoReserve, false, Smod2.Config.SettingType.BOOL, true, "Whether to automatically make reserved slots for Patreon supporters"));
 			// Register commands
-			this.AddCommand("patreon", new PatreonCommand());
+			AddCommand("patreon", new PatreonCommand());
 		}
 
 		public static void CreateFile()
 		{
-			if (!File.Exists(patreonFile))
+			if (!File.Exists(PatronFile))
 			{
-				File.Create(patreonFile);
+				File.Create(PatronFile);
 			}
 		}
 
-		public static List<Patreon> GetPatreons()
+		public static List<Patron> GetPatrons()
 		{
-			List<string> patreonIDs = new List<string>(File.ReadAllLines(PatreonPlugin.patreonFile));
-			List<Patreon> patreons = new List<Patreon>();
+			List<string> patronIds = new List<string>(File.ReadAllLines(PatronFile));
+			List<Patron> patrons = new List<Patron>();
 
-			foreach (string patreonID in patreonIDs)
+			foreach (string patronId in patronIds)
 			{
-				Patreon patreon = Patreon.FromString(patreonID);
+				Patron patron = Patron.FromString(patronId);
 
-				if (patreon != null)
+				if (patron != null)
 				{
-					patreons.Add(patreon);
+					patrons.Add(patron);
 				}
 			}
 
-			return patreons;
+			return patrons;
 		}
 	}
 }

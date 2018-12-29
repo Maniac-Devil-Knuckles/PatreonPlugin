@@ -1,73 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
 using Smod2.API;
 
-namespace Smod.PatreonPlugin
+namespace Dankrushen.PatreonPlugin
 {
-	static class ReservedSlotManager
+	public static class ReservedSlotManager
 	{
-		public readonly static string SLOT_COMMENT_PREFIX = "<PATREON>";
+		public const string SlotCommentPrefix = "<PATREON>";
 
-		public static ReservedSlot[] GetPatreonSlots()
+		public static ReservedSlot[] GetPatronSlots()
 		{
-			List<ReservedSlot> patreonSlots = new List<ReservedSlot>();
-
-			foreach (ReservedSlot slot in ReservedSlot.GetSlots())
-			{
-				if (!string.IsNullOrEmpty(slot.Comment) && slot.Comment.Trim().StartsWith(SLOT_COMMENT_PREFIX))
-				{
-					patreonSlots.Add(slot);
-				}
-			}
-
-			return patreonSlots.ToArray();
+			return ReservedSlot.GetSlots().Where(slot => !string.IsNullOrEmpty(slot.Comment) && slot.Comment.Trim().StartsWith(SlotCommentPrefix)).ToArray();
 		}
 
-		public static bool IsValidPatreon(string steamID)
+		public static bool IsValidPatron(string steamId)
 		{
-			foreach (Patreon patron in PatreonPlugin.GetPatreons())
-			{
-				if (patron.SteamId == steamID.Trim() && patron.AutoReserve)
-				{
+			foreach (Patron patron in PatreonPlugin.GetPatrons())
+				if (patron.SteamId == steamId.Trim() && patron.AutoReserve)
 					return true;
-				}
-			}
 
 			return false;
 		}
 
-		public static bool ReservedSlotsContains(string steamID)
+		public static bool ReservedSlotsContains(string steamId)
 		{
-			foreach (ReservedSlot slot in ReservedSlot.GetSlots())
-			{
-				if (slot.SteamID == steamID.Trim())
-				{
-					return true;
-				}
-			}
-
-			return false;
+			return ReservedSlot.GetSlots().Any(slot => slot.SteamID == steamId.Trim());
 		}
 
 		public static void UpdateReservedSlot(Player player)
 		{
-			// Remove Patreons that are no longer in the list
-			foreach (ReservedSlot slot in GetPatreonSlots())
-			{
-				if (!IsValidPatreon(slot.SteamID))
-				{
+			// Remove Patrons that are no longer in the list
+			foreach (ReservedSlot slot in GetPatronSlots())
+				if (!IsValidPatron(slot.SteamID))
 					slot.RemoveSlotFromFile();
-				}
-			}
 
 			// Add Patron to reserved slot if they aren't already
-			foreach (Patreon patron in PatreonPlugin.GetPatreons())
-			{
+			foreach (Patron patron in PatreonPlugin.GetPatrons())
 				if (patron.AutoReserve && patron.SteamId == player.SteamId && !ReservedSlotsContains(player.SteamId))
-				{
-					// Make reserved slot for patron and append it to the Reserved Slot file
-					new ReservedSlot(player.IpAddress, player.SteamId, SLOT_COMMENT_PREFIX + " " + player.Name).AppendToFile();
-				}
-			}
+					new ReservedSlot(player.IpAddress, player.SteamId, SlotCommentPrefix + " " + player.Name).AppendToFile();
 		}
 	}
 }
