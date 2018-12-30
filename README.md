@@ -5,7 +5,7 @@ This is a plugin for managing Patreon perks in the game with large customizabili
 ### General
 Config Option | Value Type | Default Value | Description
 --- | :---: | :---: | ---
-patreon_items | Dictionary | **Empty** | The default items to give to Patreon supporters (Format: Key = Class ID, Value = Item ID)
+patreon_items | Dictionary | **Empty** | The default items to give to Patreon supporters (Format: `Class ID:Item ID,Class ID:Item ID...`)
 patreon_tag | String | **Empty** | The default tag to use for Patreon supporters
 patreon_tag_colour | String | default | The default tag colour to use for Patreon supporters
 patreon_tag_auto_refresh | Boolean | False | If true, the tags will be updated whenever a Patreon supporter's class is set
