@@ -10,7 +10,7 @@ patreon_tag | String | **Empty** | The default tag to use for Patreon supporters
 patreon_tag_colour | String | default | The default tag colour to use for Patreon supporters
 patreon_tag_auto_refresh | Boolean | False | If true, the tags will be updated whenever a Patreon supporter's class is set
 patreon_auto_reserve | Boolean | False | If true, Patreon supporters will automatically get Reserved Slot entries created
-patreon_\<Rank Name\>_items | Dictionary | **Empty** | The default items to give to Patreon supporters with the specified rank (Format: Key = Class ID, Value = Item ID)
+patreon_\<Rank Name\>_items | Dictionary | **Empty** | The default items to give to Patreon supporters with the specified rank (Format: `Class ID:Item ID,Class ID:Item ID...`)
 patreon_\<Rank Name\>_tag | String | **Empty** | The default tag to use for Patreon supporters with the specified rank
 patreon_\<Rank Name\>_tag_colour | String | default | The default tag colour to use for Patreon supporters with the specified rank
 patreon_\<Rank Name\>_tag_auto_refresh | Boolean | False | If true, the tags will be updated whenever a Patreon supporter with the specified rank's class is set
