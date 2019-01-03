@@ -78,7 +78,7 @@ namespace Dankrushen.PatreonPlugin
 				const string defConf = ConfigOptions.PatreonTag;
 				tagTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.Singleton.GetConfigString(defConf);
 
-				PatreonPlugin.Singleton.Debug("No custom tag value, using default tag from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + tagTagValue + "\"");
+				// PatreonPlugin.Singleton.Debug("No custom tag value, using default tag from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + tagTagValue + "\"");
 			}
 
 			if (colourTagValue == null)
@@ -87,7 +87,7 @@ namespace Dankrushen.PatreonPlugin
 				const string defConf = ConfigOptions.PatreonTagColour;
 				colourTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.Singleton.GetConfigString(defConf);
 
-				PatreonPlugin.Singleton.Debug("No custom colour value, using default colour from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + colourTagValue + "\"");
+				// PatreonPlugin.Singleton.Debug("No custom colour value, using default colour from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + colourTagValue + "\"");
 			}
 
 			if (itemTagValue == null)
@@ -96,7 +96,7 @@ namespace Dankrushen.PatreonPlugin
 				const string defConf = ConfigOptions.PatreonItems;
 				itemTagValue = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetString(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.Singleton.GetConfigString(defConf);
 
-				PatreonPlugin.Singleton.Debug("No custom items value, using default items from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + itemTagValue + "\"");
+				// PatreonPlugin.Singleton.Debug("No custom items value, using default items from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + itemTagValue + "\"");
 			}
 
 			if (!autoRefresh)
@@ -105,7 +105,7 @@ namespace Dankrushen.PatreonPlugin
 				const string defConf = ConfigOptions.PatreonTagAutoRefresh;
 				autoRefresh = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetBool(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.Singleton.GetConfigBool(defConf);
 
-				PatreonPlugin.Singleton.Debug("No custom auto-refresh value, using default auto-refresh from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + AutoRefreshTags + "\"");
+				// PatreonPlugin.Singleton.Debug("No custom auto-refresh value, using default auto-refresh from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + AutoRefreshTags + "\"");
 			}
 
 			if (!autoReserve)
@@ -114,7 +114,7 @@ namespace Dankrushen.PatreonPlugin
 				const string defConf = ConfigOptions.PatreonAutoReserve;
 				autoReserve = ConfigOptions.ContainsRank(rankConf, rankTagValue) ? ConfigFile.GetBool(ConfigOptions.GetRankConf(rankConf, rankTagValue)) : PatreonPlugin.Singleton.GetConfigBool(defConf);
 
-				PatreonPlugin.Singleton.Debug("No custom auto-reserve value, using default auto-reserve from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + AutoRefreshTags + "\"");
+				// PatreonPlugin.Singleton.Debug("No custom auto-reserve value, using default auto-reserve from " + (ConfigOptions.ContainsRank(rankConf, rankTagValue) ? "rank" : "patreon") + " config: \"" + AutoRefreshTags + "\"");
 			}
 
 			// Return new instance with values
