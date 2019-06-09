@@ -20,9 +20,7 @@ patreon_\<Rank Name\>_auto_reserve | Boolean | False | If true, Patreon supporte
 This config is stored as `PatronList.txt` in the server's config directory (ex. AppData).
 The custom configuration file for this is very open in formatting.
 
-For the formatting of the files, there are some loose rules:
-- You must have a SteamID in the line for a Patreon entry, the first 17 digit number in the line will be used for this
-- Any line without a SteamID will be ignored
+The first value of each line is the SteamID, lines without a SteamID as the first value will be parsed, but won't match to any players (therefore are ignored).
 
 For custom values per Patron, the format for tags should be `--tag value_without_spaces` or `--tag "value with spaces"`
 

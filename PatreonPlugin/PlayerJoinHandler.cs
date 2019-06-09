@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MEC;
 using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
@@ -9,15 +10,24 @@ namespace Dankrushen.PatreonPlugin
 	{
 		public void OnPlayerJoin(PlayerJoinEvent ev)
 		{
-			SetPatronRoles(ev.Player);
-			ReservedSlotManager.UpdateReservedSlot(ev.Player);
+			Timing.RunCoroutine(OnPlayerJoinCoroutine(ev.Player));
+		}
+
+		public static IEnumerator<float> OnPlayerJoinCoroutine(Player player)
+		{
+			SetPatronRoles(player);
+			ReservedSlotManager.UpdateReservedSlot(player);
+			yield break;
 		}
 
 		public static void SetPatronRoles(Player[] players)
 		{
+			if (ArgumentParsing.ArrayIsNullOrEmpty(players))
+				return;
+
 			PatreonPlugin.CreateFile();
 
-			List<Patron> patronIds = PatreonPlugin.GetPatrons();
+			Patron[] patronIds = PatreonPlugin.Patrons;
 
 			foreach (Player player in players)
 			{
@@ -33,7 +43,7 @@ namespace Dankrushen.PatreonPlugin
 
 		public static void SetPatronRoles(Player player)
 		{
-			SetPatronRoles(new[] { player });
+			SetPatronRoles(new[] {player});
 		}
 	}
 }

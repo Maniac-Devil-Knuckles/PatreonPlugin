@@ -14,11 +14,7 @@ namespace Dankrushen.PatreonPlugin
 
 		public static bool IsValidPatron(string steamId)
 		{
-			foreach (Patron patron in PatreonPlugin.GetPatrons())
-				if (patron.SteamId == steamId.Trim() && patron.AutoReserve)
-					return true;
-
-			return false;
+			return PatreonPlugin.Patrons.Any(patron => patron.SteamId == steamId.Trim() && patron.AutoReserve);
 		}
 
 		public static bool ReservedSlotsContains(string steamId)
@@ -34,7 +30,7 @@ namespace Dankrushen.PatreonPlugin
 					slot.RemoveSlotFromFile();
 
 			// Add Patron to reserved slot if they aren't already
-			foreach (Patron patron in PatreonPlugin.GetPatrons())
+			foreach (Patron patron in PatreonPlugin.Patrons)
 				if (patron.AutoReserve && patron.SteamId == player.SteamId && !ReservedSlotsContains(player.SteamId))
 					new ReservedSlot(player.IpAddress, player.SteamId, SlotCommentPrefix + " " + player.Name).AppendToFile();
 		}

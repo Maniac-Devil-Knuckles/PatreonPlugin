@@ -1,17 +1,16 @@
-﻿using System.Text.RegularExpressions;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace Dankrushen.PatreonPlugin
 {
 	public class Patron
 	{
-		public readonly string SteamId;
-		public readonly string Tag;
-		public readonly string Colour;
-		public readonly string Items;
-		public readonly bool AutoRefresh;
-		public readonly bool AutoReserve;
-		public readonly string Rank;
+		public string SteamId { get; }
+		public string Tag { get; }
+		public string Colour { get; }
+		public string Items { get; }
+		public bool AutoRefresh { get; }
+		public bool AutoReserve { get; }
+		public string Rank { get; }
 
 		public Patron(string steamId, string tag = null, string colour = null, string items = null, bool autoRefresh = false, bool autoReserve = false, string rank = null)
 		{
@@ -24,32 +23,72 @@ namespace Dankrushen.PatreonPlugin
 			Rank = rank;
 		}
 
-		private const string OptionRegex = "(\\s|^)({0})(\\s?=\\s?|\\s)(\"[^\"]+\"|[^\\s\"]+)";
-		private const string OptionOptionRegex = "\\s*({0})(\\s?=\\s?|\\s)";
+		private static readonly string[] tagKeys =
+		{
+			"tag",
+			"customtag",
+			"custom"
+		};
 
-		private const string TagOnlyRegex = "(\\s|^)({0})(?=\\s|$)"; // For example: "SteamID -a -c "blue""
+		private static readonly string[] tagAliases =
+		{
+			"t"
+		};
 
-		private const string TagTags = "-t|--tag|--customtag|--custom";
-		private static readonly Regex tagRegex = new Regex(string.Format(OptionRegex, TagTags), RegexOptions.Compiled);
-		private static readonly Regex tagOptionRegex = new Regex(string.Format(OptionOptionRegex, TagTags), RegexOptions.Compiled);
+		private static readonly string[] colourKeys =
+		{
+			"colour",
+			"color"
+		};
 
-		private const string ColourTags = "-c|--colour|--color";
-		private static readonly Regex colourRegex = new Regex(string.Format(OptionRegex, ColourTags), RegexOptions.Compiled);
-		private static readonly Regex colourOptionRegex = new Regex(string.Format(OptionOptionRegex, ColourTags), RegexOptions.Compiled);
+		private static readonly string[] colourAliases =
+		{
+			"c"
+		};
 
-		private const string ItemTags = "-i|--items|--customitems";
-		private static readonly Regex itemsRegex = new Regex(string.Format(OptionRegex, ItemTags), RegexOptions.Compiled);
-		private static readonly Regex itemsOptionRegex = new Regex(string.Format(OptionOptionRegex, ItemTags), RegexOptions.Compiled);
+		private static readonly string[] itemKeys =
+		{
+			"items",
+			"customitems"
+		};
 
-		private const string AutoRefreshTags = "-a|--auto|--autorefresh";
-		private static readonly Regex autoRefreshRegex = new Regex(string.Format(TagOnlyRegex, AutoRefreshTags), RegexOptions.Compiled);
+		private static readonly string[] itemAliases =
+		{
+			"i"
+		};
 
-		private const string AutoReserveTags = "-s|--slot|--reserved|--reservedslot";
-		private static readonly Regex autoReserveRegex = new Regex(string.Format(TagOnlyRegex, AutoReserveTags), RegexOptions.Compiled);
+		private static readonly string[] autoRefreshKeys =
+		{
+			"auto",
+			"autorefresh"
+		};
 
-		private const string RankTags = "-r|--rank";
-		private static readonly Regex rankRegex = new Regex(string.Format(OptionRegex, RankTags), RegexOptions.Compiled);
-		private static readonly Regex rankOptionRegex = new Regex(string.Format(OptionOptionRegex, RankTags), RegexOptions.Compiled);
+		private static readonly string[] autoRefreshAliases =
+		{
+			"a"
+		};
+
+		private static readonly string[] autoReserveKeys =
+		{
+			"slot",
+			"reserved",
+			"reservedslot"
+		};
+
+		private static readonly string[] autoReserveAliases =
+		{
+			"s"
+		};
+
+		private static readonly string[] rankKeys =
+		{
+			"rank"
+		};
+
+		private static readonly string[] rankAliases =
+		{
+			"r"
+		};
 
 		[CanBeNull]
 		public static Patron FromString(string fileLine)
@@ -59,17 +98,19 @@ namespace Dankrushen.PatreonPlugin
 			if (string.IsNullOrEmpty(fileLine))
 				return null;
 
-			string steam64Match = FindFirstSteamId(fileLine);
+			string[] args = ArgumentParsing.StringToArgs(fileLine);
 
-			if (string.IsNullOrEmpty(steam64Match))
+			if (ArgumentParsing.ArrayIsNullOrEmpty(args))
 				return null;
 
-			string tagTagValue = MatchOption(fileLine, tagRegex, tagOptionRegex);
-			string colourTagValue = MatchOption(fileLine, colourRegex, colourOptionRegex);
-			string itemTagValue = MatchOption(fileLine, itemsRegex, itemsOptionRegex);
-			bool autoRefresh = MatchFlag(fileLine, autoRefreshRegex);
-			bool autoReserve = MatchFlag(fileLine, autoReserveRegex);
-			string rankTagValue = MatchOption(fileLine, rankRegex, rankOptionRegex);
+			string steam64Match = args[0];
+
+			string tagTagValue = ArgumentParsing.GetParamFromArgs(args, tagKeys, tagAliases);
+			string colourTagValue = ArgumentParsing.GetParamFromArgs(args, colourKeys, colourAliases);
+			string itemTagValue = ArgumentParsing.GetParamFromArgs(args, itemKeys, itemAliases);
+			bool autoRefresh = ArgumentParsing.GetFlagFromArgs(args, autoRefreshKeys, autoRefreshAliases);
+			bool autoReserve = ArgumentParsing.GetFlagFromArgs(args, autoReserveKeys, autoReserveAliases);
+			string rankTagValue = ArgumentParsing.GetParamFromArgs(args, rankKeys, rankAliases);
 
 			// Set from default or rank values
 			if (tagTagValue == null)
@@ -119,77 +160,6 @@ namespace Dankrushen.PatreonPlugin
 
 			// Return new instance with values
 			return new Patron(steam64Match, tagTagValue, colourTagValue, itemTagValue, autoRefresh, autoReserve, rankTagValue);
-
-		}
-
-		[CanBeNull]
-		public static string MatchOption(string fileLine, Regex tagRegex, Regex optionRegex)
-		{
-			Match tagMatch = tagRegex.Match(fileLine);
-
-			if (!tagMatch.Success || string.IsNullOrEmpty(tagMatch.Value.Trim()))
-				return null;
-
-			Match optionMatch = optionRegex.Match(tagMatch.Value.Trim());
-
-			if (!optionMatch.Success || string.IsNullOrEmpty(optionMatch.Value.Trim()))
-				return null;
-
-			string finalOption = tagMatch.Value.Trim().Remove(0, optionMatch.Value.Length).Trim();
-
-			if (finalOption.StartsWith("\"") && finalOption.EndsWith("\""))
-			{
-				finalOption = finalOption.Substring(1, finalOption.Length - 2);
-			}
-
-			return finalOption;
-
-		}
-
-		public static bool MatchFlag(string fileLine, Regex flagRegex)
-		{
-			Match flagMatch = flagRegex.Match(fileLine);
-			return flagMatch.Success;
-		}
-
-		public static string FindFirstSteamId(string fileLine)
-		{
-			if (string.IsNullOrEmpty(fileLine) || fileLine.Length < 17)
-			{
-				return null;
-			}
-
-			for (int i = 0; i <= fileLine.Length - 17; i++)
-			{
-				string result = fileLine.Substring(i, 17);
-
-				if (PatreonCommand.IsSteamId(result))
-				{
-					return result;
-				}
-			}
-
-			return null;
-		}
-
-		public override bool Equals(object o)
-		{
-			return ReferenceEquals(this, o);
-		}
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = (SteamId != null ? SteamId.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (Tag != null ? Tag.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (Colour != null ? Colour.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (Items != null ? Items.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ AutoRefresh.GetHashCode();
-				hashCode = (hashCode * 397) ^ AutoReserve.GetHashCode();
-				hashCode = (hashCode * 397) ^ (Rank != null ? Rank.GetHashCode() : 0);
-				return hashCode;
-			}
 		}
 
 		public static bool operator ==(Patron a, Patron b)

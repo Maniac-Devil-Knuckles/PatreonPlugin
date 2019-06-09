@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using Smod2;
+using Smod2.API;
 using Smod2.Attributes;
-using Smod2.EventHandlers;
+using Smod2.Config;
 
 namespace Dankrushen.PatreonPlugin
 {
@@ -11,26 +12,56 @@ namespace Dankrushen.PatreonPlugin
 		name = "PatreonPlugin",
 		description = "A plugin to reward Patreon supporters",
 		id = "dankrushen.patreon",
-		version = "1.9",
+		configPrefix = "patreon",
+		version = "2.0",
 		SmodMajor = 3,
-		SmodMinor = 2,
-		SmodRevision = 0
-		)]
+		SmodMinor = 4,
+		SmodRevision = 1
+	)]
 	public class PatreonPlugin : Plugin
 	{
 		public static PatreonPlugin Singleton { get; private set; }
-		public static string PatronFile = FileManager.GetAppFolder(true) + "PatronList.txt";
+
+		public const string PatronFileName = "PatronList.txt";
+		public static readonly string PatronFile = FileManager.GetAppFolder(true) + PatronFileName;
+
+		private static FileSystemWatcher patronFileWatcher;
+
+		public static Patron[] FilePatrons => File.ReadAllLines(PatronFile).Select(Patron.FromString).Where(patron => patron != null).ToArray();
+
+		private static readonly object patronsLock = new object();
+		private static Patron[] patrons;
+
+		public static Patron[] Patrons
+		{
+			get
+			{
+				lock (patronsLock)
+				{
+					return patrons ?? UpdateCachedPatrons();
+				}
+			}
+		}
+
+		public static Player[] Players => PluginManager.Manager?.Server?.GetPlayers()?.ToArray() ?? new Player[0];
 
 		public override void OnDisable()
 		{
+			patronFileWatcher.Dispose();
+			patronFileWatcher = null;
+
 			Info(Details.name + " v" + Details.version + " has been disabled!");
 		}
 
 		public override void OnEnable()
 		{
+			Singleton = this;
+
 			CreateFile();
 
-			Singleton = this;
+			patronFileWatcher = new FileSystemWatcher {Path = FileManager.GetAppFolder(true), Filter = PatronFileName, NotifyFilter = NotifyFilters.LastWrite};
+			patronFileWatcher.Changed += (sender, args) => { UpdateCachedPatrons(); };
+			patronFileWatcher.EnableRaisingEvents = true;
 
 			Info(Details.name + " v" + Details.version + " has been enabled!");
 		}
@@ -38,42 +69,37 @@ namespace Dankrushen.PatreonPlugin
 		public override void Register()
 		{
 			// Register Events
-			AddEventHandler(typeof(IEventHandlerSetRole), new ClassSetHandler());
-			AddEventHandler(typeof(IEventHandlerPlayerJoin), new PlayerJoinHandler());
+			AddEventHandlers(new ClassSetHandler());
+			AddEventHandlers(new PlayerJoinHandler());
+
 			// Register config settings
-			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonItems, "", Smod2.Config.SettingType.STRING, true, "The items to give Patreon supporters when they spawn"));
-			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonTag, "", Smod2.Config.SettingType.STRING, true, "The tag to give Patreon supporters"));
-			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonTagColour, "default", Smod2.Config.SettingType.STRING, true, "The colour of the tag to give to Patreon supporters"));
-			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonTagAutoRefresh, false, Smod2.Config.SettingType.BOOL, true, "Whether to automatically refresh Patreon supporters tags every time their class is set"));
-			AddConfig(new Smod2.Config.ConfigSetting(ConfigOptions.PatreonAutoReserve, false, Smod2.Config.SettingType.BOOL, true, "Whether to automatically make reserved slots for Patreon supporters"));
+			AddConfig(new ConfigSetting(ConfigOptions.PatreonItems, "", true, "The items to give Patreon supporters when they spawn"));
+			AddConfig(new ConfigSetting(ConfigOptions.PatreonTag, "", true, "The tag to give Patreon supporters"));
+			AddConfig(new ConfigSetting(ConfigOptions.PatreonTagColour, "default", true, "The colour of the tag to give to Patreon supporters"));
+			AddConfig(new ConfigSetting(ConfigOptions.PatreonTagAutoRefresh, false, true, "Whether to automatically refresh Patreon supporters tags every time their class is set"));
+			AddConfig(new ConfigSetting(ConfigOptions.PatreonAutoReserve, false, true, "Whether to automatically make reserved slots for Patreon supporters"));
+
 			// Register commands
 			AddCommand("patreon", new PatreonCommand());
 		}
 
-		public static void CreateFile()
+		public static bool CreateFile()
 		{
-			if (!File.Exists(PatronFile))
-			{
-				File.Create(PatronFile);
-			}
+			if (File.Exists(PatronFile)) return false;
+
+			File.Create(PatronFile).Close();
+			return true;
 		}
 
-		public static List<Patron> GetPatrons()
+		public static Patron[] UpdateCachedPatrons()
 		{
-			List<string> patronIds = new List<string>(File.ReadAllLines(PatronFile));
-			List<Patron> patrons = new List<Patron>();
+			Singleton.Debug("Updating array of cached patrons...");
 
-			foreach (string patronId in patronIds)
+			lock (patronsLock)
 			{
-				Patron patron = Patron.FromString(patronId);
-
-				if (patron != null)
-				{
-					patrons.Add(patron);
-				}
+				Patron[] filePatrons = CreateFile() ? new Patron[0] : FilePatrons;
+				return patrons = filePatrons;
 			}
-
-			return patrons;
 		}
 	}
 }

@@ -4,7 +4,7 @@
 	{
 		public const string NotEnoughArgs = "Error: Not enough arguments!";
 		public const string FuncNotFound = "Error: Function not found!";
-		public const string InvalidSteamId = "Error: Invalid SteamID!";
+		public const string InvalidEntry = "Error: Invalid entry!";
 
 		public const string SteamIdOnList = "Error: This SteamID is already on the Patreon supporter list!";
 		public const string SteamIdNotOnList = "Error: This SteamID is not on the Patreon supporter list!";
