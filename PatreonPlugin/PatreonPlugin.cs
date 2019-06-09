@@ -93,8 +93,6 @@ namespace Dankrushen.PatreonPlugin
 
 		public static Patron[] UpdateCachedPatrons()
 		{
-			Singleton.Debug("Updating array of cached patrons...");
-
 			lock (patronsLock)
 			{
 				Patron[] filePatrons = CreateFile() ? new Patron[0] : FilePatrons;
