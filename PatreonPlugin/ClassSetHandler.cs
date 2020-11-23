@@ -13,7 +13,7 @@ namespace Dankrushen.PatreonPlugin
 
 			foreach (Patron patron in PatreonPlugin.Patrons)
 			{
-				if (patron.SteamId != ev.Player.SteamId || !patron.AutoRefresh)
+				if (patron.UserId != ev.Player.UserId || !patron.AutoRefresh)
 					continue;
 
 				PlayerJoinHandler.SetPatronRoles(ev.Player);
@@ -21,15 +21,15 @@ namespace Dankrushen.PatreonPlugin
 			}
 		}
 
-		public static ItemType[] GetPatronItems(Player player, TeamRole teamRole)
+		public static Smod2.API.ItemType[] GetPatronItems(Player player, TeamRole teamRole)
 		{
 			PatreonPlugin.CreateFile();
 
-			List<ItemType> items = new List<ItemType>();
+			List<Smod2.API.ItemType> items = new List<Smod2.API.ItemType>();
 
 			foreach (Patron patron in PatreonPlugin.Patrons)
 			{
-				if (patron.SteamId != player.SteamId || string.IsNullOrEmpty(patron.Items))
+				if (patron.UserId != player.UserId || string.IsNullOrEmpty(patron.Items))
 					continue;
 
 				foreach (string item in patron.Items.Split(','))
@@ -40,7 +40,7 @@ namespace Dankrushen.PatreonPlugin
 					{
 						if (((int) teamRole.Role == charClass || charClass < 0) && !teamRole.Team.Equals(Team.RIP) && !teamRole.Team.Equals(Team.SCP))
 						{
-							items.Add((ItemType) classItem);
+							items.Add((Smod2.API.ItemType) classItem);
 						}
 					}
 					else if (split.Length >= 2)

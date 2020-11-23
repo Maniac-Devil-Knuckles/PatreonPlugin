@@ -1,0 +1,625 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Smod2</name>
+    </assembly>
+    <members>
+        <member name="P:Smod2.API.Item.UniqueIdentifier">
+            <summary>
+            Used so IEquatable is possible so you can compare items.
+            </summary>
+        </member>
+        <member name="M:Smod2.API.Map.GetRooms">
+            <summary>
+            Gets every Room in the game including surface (Pocket excluded)
+            </summary>
+            <returns>Every room in the game</returns>
+        </member>
+        <member name="M:Smod2.API.Map.FemurBreaker(System.Boolean)">
+            <summary>  
+            Note: When FemurBreaker is enabled, SCP-106 can't be contained. This might break the lure configs and mechanism.
+            </summary> 
+        </member>
+        <member name="M:Smod2.API.Map.SpawnSpawnable(Smod2.API.Spawnable,Smod2.API.Vector,Smod2.API.Vector,Smod2.API.Vector,System.Boolean)">
+            <summary>
+            Spawns an item for everyone then returns that object.
+            </summary>
+            <param name="ThingToSpawn">Which prefab to use</param>
+            <param name="position">Global position</param>
+            <param name="rotation">Rotation</param>
+            <param name="size">Scale the prefab</param>
+            <param name="spawnRightAway">Should it spawn the Spawnable right away or let the plugin do it.</param>
+            <returns>Gameobject that has been spawned</returns>
+        </member>
+        <member name="M:Smod2.API.Player.Get106Portal">
+            <summary>  
+            Get SCP-106's portal position. Returns zero if Player is not SCP-106 or SCP-106 hasn't created one.
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Zero">
+            <summary>  
+             Shorthand for writing new Vector(0, 0, 0).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.One">
+            <summary>  
+             Shorthand for writing new Vector(1, 1, 1).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Forward">
+            <summary>  
+             Shorthand for writing new Vector(0, 0, 1).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Back">
+            <summary>  
+             Shorthand for writing new Vector(0, 0, -1).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Up">
+            <summary>  
+             Shorthand for writing new Vector(0, 1, 0).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Down">
+            <summary>  
+             Shorthand for writing new Vector(0, -1, 0).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Right">
+            <summary>  
+             Shorthand for writing new Vector(1, 0, 0).
+            </summary> 
+        </member>
+        <member name="P:Smod2.API.Vector.Left">
+            <summary>  
+             Shorthand for writing new Vector(-1, 0, 0).
+            </summary> 
+        </member>
+        <member name="M:Smod2.API.Vector.Distance(Smod2.API.Vector,Smod2.API.Vector)">
+            <summary>
+            Calculates the distance between two vectors.
+            </summary>
+        </member>
+        <member name="M:Smod2.API.Vector.Lerp(Smod2.API.Vector,Smod2.API.Vector,System.Single)">
+            <summary>
+            Linearly interpolates two vectors given a value from 0 to 1.
+            </summary>
+        </member>
+        <member name="M:Smod2.API.Vector.Min(Smod2.API.Vector,Smod2.API.Vector)">
+            <summary>
+            Returns the smallest values of the two vectors.
+            </summary>
+        </member>
+        <member name="M:Smod2.API.Vector.Max(Smod2.API.Vector,Smod2.API.Vector)">
+            <summary>
+            Returns the largest values of the two vectors.
+            </summary>
+        </member>
+        <member name="P:Smod2.API.Vector.Magnitude">
+            <summary>
+            Calculates the magnitude (distance from origin) of a vector.
+            </summary>
+        </member>
+        <member name="P:Smod2.API.Vector.SqrMagnitude">
+            <summary>
+            Calculates the square of the magnitude (distance from origin) of a vector.
+            </summary>
+        </member>
+        <member name="P:Smod2.API.Vector.Normalize">
+            <summary>
+            Coverts a vector's values to a max of 1.
+            </summary>
+        </member>
+        <member name="M:Smod2.API.Vector.op_Equality(Smod2.API.Vector,Smod2.API.Vector)">
+            <summary>
+            Performs an value (not reference) equality check of two vectors. Use <see cref="M:System.Object.Equals(System.Object)"/> for reference checks.
+            </summary>
+        </member>
+        <member name="M:Smod2.API.Vector.op_Inequality(Smod2.API.Vector,Smod2.API.Vector)">
+            <summary>
+            Performs an value (not reference) inequality check of two vectors. Use <see cref="M:System.Object.Equals(System.Object)"/> for reference checks.
+            </summary>
+        </member>
+        <member name="P:Smod2.Events.PlayerLockerAccessEvent.ChamberAccessToken">
+            <summary>
+            Is the same permissions for items.
+            </summary>
+        </member>
+        <member name="P:Smod2.Events.PlayerLockerAccessEvent.IsOpening">
+            <summary>
+            true if the player is opening the locker; otherwise, false.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSCP914Activate.OnSCP914Activate(Smod2.Events.SCP914ActivateEvent)">
+            <summary>  
+             This is the event handler for when a SCP914 is activated
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerWarheadStartCountdown.OnStartCountdown(Smod2.Events.WarheadStartEvent)">
+            <summary>  
+             This is the event handler for when the warhead starts counting down, isResumed is false if its the initial count down. Note: activator can be null
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerWarheadStopCountdown.OnStopCountdown(Smod2.Events.WarheadStopEvent)">
+            <summary>  
+             This is the event handler for when the warhead stops counting down.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerWarheadDetonate.OnDetonate">
+            <summary>  
+             This is the event handler for when the warhead is about to detonate (so before it actually triggers)
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerLCZDecontaminate.OnDecontaminate">
+            <summary>  
+             This is the event handler for when the LCZ is decontaminated
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSummonVehicle.OnSummonVehicle(Smod2.Events.SummonVehicleEvent)">
+            <summary>  
+            Called when a van/chopper is summoned.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGeneratorFinish.OnGeneratorFinish(Smod2.Events.GeneratorFinishEvent)">
+            <summary>
+            Called when a generator becomes engaged.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerScpDeathAnnouncement.OnScpDeathAnnouncement(Smod2.Events.ScpDeathAnnouncementEvent)">
+            <summary>
+            Called when a C.A.S.S.I.E. announcement gets added for an SCP death.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerCassieCustomAnnouncement.OnCassieCustomAnnouncement(Smod2.Events.CassieCustomAnnouncementEvent)">
+            <summary>  
+             This event handler will call when a custom announcement is made. (AKA through the api for example.)
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerCassieTeamAnnouncement.OnCassieTeamAnnouncement(Smod2.Events.CassieTeamAnnouncementEvent)">
+            <summary>  
+             This event handler will call when NTF respawns.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerHurt.OnPlayerHurt(Smod2.Events.PlayerHurtEvent)">
+            <summary>  
+            This is called before the player is going to take damage.
+            In case the attacker can't be passed, attacker will be null (fall damage etc)
+            This may be broken into two events in the future
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerDie.OnPlayerDie(Smod2.Events.PlayerDeathEvent)">
+            <summary>  
+            This is called before the player is about to die. Be sure to check if player is SCP106 (classID 3) and if so, set spawnRagdoll to false.
+            In case the killer can't be passed, attacker will be null, so check for that before doing something.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerPickupItem.OnPlayerPickupItem(Smod2.Events.PlayerPickupItemEvent)">
+            <summary>  
+            This is called when a player picks up an item and its deleted off of the ground and is NOT in their inventory.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerPickupItemLate.OnPlayerPickupItemLate(Smod2.Events.PlayerPickupItemLateEvent)">
+            <summary>  
+            This is called after a player picks up an item and is in their inventory.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerDropItem.OnPlayerDropItem(Smod2.Events.PlayerDropItemEvent)">
+            <summary>  
+            This is called when a player drops up an item.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerDropAllItems.OnPlayerDropAllItems(Smod2.Events.PlayerDropAllItemsEvent)">
+            <summary>  
+            This is called when all of the items in a player's inventory are going to be dropped.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerJoin.OnPlayerJoin(Smod2.Events.PlayerJoinEvent)">
+            <summary>  
+            This is called when a player joins and is initialised.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerNicknameSet.OnNicknameSet(Smod2.Events.PlayerNicknameSetEvent)">
+            <summary>  
+            This is called when a player attempts to set their nickname after joining. This will only be called once per game join.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerInitialAssignTeam.OnAssignTeam(Smod2.Events.PlayerInitialAssignTeamEvent)">
+            <summary>  
+            Called when a team is picked for a player. Nothing is assigned to the player, but you can change what team the player will spawn as.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSetRole.OnSetRole(Smod2.Events.PlayerSetRoleEvent)">
+            <summary>  
+            Called after the player is set a class, at any point in the game. 
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerCheckEscape.OnCheckEscape(Smod2.Events.PlayerCheckEscapeEvent)">
+            <summary>  
+            Called when a player is checking if they should escape (this is regardless of class)
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSpawn.OnSpawn(Smod2.Events.PlayerSpawnEvent)">
+            <summary>  
+            Called when a player spawns into the world
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerDoorAccess.OnDoorAccess(Smod2.Events.PlayerDoorAccessEvent)">
+            <summary>  
+            Called when a player attempts to access a door that requires perms
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerIntercom.OnIntercom(Smod2.Events.PlayerIntercomEvent)">
+            <summary>  
+            Called when a player attempts to use intercom.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerIntercomCooldownCheck.OnIntercomCooldownCheck(Smod2.Events.PlayerIntercomCooldownCheckEvent)">
+            <summary>  
+            Called when a player attempts to use intercom. This happens before the cooldown check.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPocketDimensionExit.OnPocketDimensionExit(Smod2.Events.PlayerPocketDimensionExitEvent)">
+            <summary>  
+            Called when a player escapes from Pocket Demension
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPocketDimensionEnter.OnPocketDimensionEnter(Smod2.Events.PlayerPocketDimensionEnterEvent)">
+            <summary>  
+            Called when a player enters Pocket Demension
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPocketDimensionDie.OnPocketDimensionDie(Smod2.Events.PlayerPocketDimensionDieEvent)">
+            <summary>  
+            Called when a player enters the wrong way of Pocket Demension. This happens before the player is killed.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerThrowGrenade.OnThrowGrenade(Smod2.Events.PlayerThrowGrenadeEvent)">
+            <summary>  
+            Called after a player throws a grenade
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerInfected.OnPlayerInfected(Smod2.Events.PlayerInfectedEvent)">
+            <summary>  
+            Called when a player is cured by SCP-049
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSpawnRagdoll.OnSpawnRagdoll(Smod2.Events.PlayerSpawnRagdollEvent)">
+            <summary>  
+            Called when a ragdoll is spawned
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerLure.OnLure(Smod2.Events.PlayerLureEvent)">
+            <summary>  
+            Called when a player enters FemurBreaker
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerContain106.OnContain106(Smod2.Events.PlayerContain106Event)">
+            <summary>  
+            Called when a player presses the button to contain SCP-106
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerMedicalUse.OnMedicalUse(Smod2.Events.PlayerMedicalUseEvent)">
+            <summary>  
+            Called when a player uses Medkit
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerShoot.OnShoot(Smod2.Events.PlayerShootEvent)">
+            <summary>  
+            Called when a player shoots
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler106CreatePortal.On106CreatePortal(Smod2.Events.Player106CreatePortalEvent)">
+            <summary>  
+            Called when SCP-106 creates a portal
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler106Teleport.On106Teleport(Smod2.Events.Player106TeleportEvent)">
+            <summary>  
+            Called when SCP-106 teleports through portals
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerElevatorUse.OnElevatorUse(Smod2.Events.PlayerElevatorUseEvent)">
+            <summary>  
+            Called when a player uses an elevator
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerHandcuffed.OnHandcuffed(Smod2.Events.PlayerHandcuffedEvent)">
+            <summary>  
+            Called when a player is about to be handcuffed/released
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerTriggerTesla.OnPlayerTriggerTesla(Smod2.Events.PlayerTriggerTeslaEvent)">
+            <summary>  
+            Called when a player triggers a tesla gate
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSCP914ChangeKnob.OnSCP914ChangeKnob(Smod2.Events.PlayerSCP914ChangeKnobEvent)">
+            <summary>  
+            Called when a player changes the knob of SCP-914
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerRadioSwitch.OnPlayerRadioSwitch(Smod2.Events.PlayerRadioSwitchEvent)">
+            <summary>  
+            Called when a player changes the status of their radio
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerMakeNoise.OnMakeNoise(Smod2.Events.PlayerMakeNoiseEvent)">
+            <summary>  
+            Called when a player makes noise
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerRecallZombie.OnRecallZombie(Smod2.Events.PlayerRecallZombieEvent)">
+            <summary>  
+            Called when SCP-049 turns someone into a zombie
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerCallCommand.OnCallCommand(Smod2.Events.PlayerCallCommandEvent)">
+            <summary>  
+            Called when a player uses a command that starts with .
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerReload.OnReload(Smod2.Events.PlayerReloadEvent)">
+            <summary>  
+            Called when a player reloads their weapon
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGrenadeExplosion.OnGrenadeExplosion(Smod2.Events.PlayerGrenadeExplosion)">
+            <summary>  
+            Called when a player's grenade explodes
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGrenadeHitPlayer.OnGrenadeHitPlayer(Smod2.Events.PlayerGrenadeHitPlayer)">
+            <summary>  
+            Called when a player's grenade hits a player
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGeneratorUnlock.OnGeneratorUnlock(Smod2.Events.PlayerGeneratorUnlockEvent)">
+            <summary>
+            Called when a player attempts to unlock a generator.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGeneratorAccess.OnGeneratorAccess(Smod2.Events.PlayerGeneratorAccessEvent)">
+            <summary>
+            Called when a player attempts to open/close a generator.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGeneratorInsertTablet.OnGeneratorInsertTablet(Smod2.Events.PlayerGeneratorInsertTabletEvent)">
+            <summary>
+            Called when a player puts a tablet in or ejects the tablet.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerGeneratorEjectTablet.OnGeneratorEjectTablet(Smod2.Events.PlayerGeneratorEjectTabletEvent)">
+            <summary>
+            Called when a player puts a tablet in or ejects the tablet.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079Door.On079Door(Smod2.Events.Player079DoorEvent)">
+            <summary>
+            Called when SCP-079 opens/closes doors.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079Lock.On079Lock(Smod2.Events.Player079LockEvent)">
+            <summary>
+            Called when SCP-079 locks/unlocks doors.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079Elevator.On079Elevator(Smod2.Events.Player079ElevatorEvent)">
+            <summary>
+            Called when SCP-079 sends an elevator up/down.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079TeslaGate.On079TeslaGate(Smod2.Events.Player079TeslaGateEvent)">
+            <summary>
+            Called when SCP-079 triggers a tesla gate.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079AddExp.On079AddExp(Smod2.Events.Player079AddExpEvent)">
+            <summary>
+            Called when a player's SCP-079 experience is added to.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079LevelUp.On079LevelUp(Smod2.Events.Player079LevelUpEvent)">
+            <summary>
+            Called when a player's SCP-079 level is incremented.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079UnlockDoors.On079UnlockDoors(Smod2.Events.Player079UnlockDoorsEvent)">
+            <summary>
+            Called when SCP-079 unlocks all doors.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079CameraTeleport.On079CameraTeleport(Smod2.Events.Player079CameraTeleportEvent)">
+            <summary>
+            Called when SCP-079 teleports to a new camera.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079StartSpeaker.On079StartSpeaker(Smod2.Events.Player079StartSpeakerEvent)">
+            <summary>
+            Called when SCP-079 starts using a speaker.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079StopSpeaker.On079StopSpeaker(Smod2.Events.Player079StopSpeakerEvent)">
+            <summary>
+            Called when SCP-079 stops using a speaker.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079Lockdown.On079Lockdown(Smod2.Events.Player079LockdownEvent)">
+            <summary>
+            Called when SCP-079 uses the lockdown (warning sign) ability.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandler079ElevatorTeleport.On079ElevatorTeleport(Smod2.Events.Player079ElevatorTeleportEvent)">
+            <summary>
+            Called when SCP-079 uses an elevator to teleport to a new floor.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerScp096Panic.OnScp096Panic(Smod2.Events.Scp096PanicEvent)">
+            <summary>
+            Called when SCP-096 enters panic mode.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerScp096Enrage.OnScp096Enrage(Smod2.Events.Scp096EnrageEvent)">
+            <summary>
+            Called when SCP-096 enters rage mode.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerScp096CooldownStart.OnScp096CooldownStart(Smod2.Events.Scp096CooldownStartEvent)">
+            <summary>
+            Called when SCP-096 enters cooldown.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerScp096CooldownEnd.OnScp096CooldownEnd(Smod2.Events.Scp096CooldownEndEvent)">
+            <summary>
+            Called when SCP-096 exits cooldown.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerScp096AddTarget.OnScp096AddTarget(Smod2.Events.Scp096AddTargetEvent)">
+            <summary>
+            Called when SCP-096 adds a target.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerLockerAccess.OnPlayerLockerAccess(Smod2.Events.PlayerLockerAccessEvent)">
+            <summary>
+            Called when the player interacts with the locker.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerDisableStatusEffect.OnDisableStatusEffect(Smod2.Events.DisableStatusEffectEvent)">
+            <summary>
+            Called when an effect is disabled or times out.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerEarlyStatusEffectChange.OnEarlyStatusEffectChange(Smod2.Events.EarlyStatusEffectChangeEvent)">
+            <summary>
+            Called before effect's duration is changed.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerLateStatusEffectChange.OnLateStatusEffectChange(Smod2.Events.LateStatusEffectChangeEvent)">
+            <summary>
+            Called after effect's duration is changed.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerSCP268Use.OnPlayerSCP268Use(Smod2.Events.PlayerSCP268UseEvent)">
+            <summary>
+            This is called when a player uses SCP-268 (AKA the hat)
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerSCP207Use.OnPlayerSCP207Use(Smod2.Events.PlayerSCP207UseEvent)">
+            <summary>
+            This is called when a player uses SCP-207 (AKA the cola)
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerRoundStart.OnRoundStart(Smod2.Events.RoundStartEvent)">
+            <summary>  
+             This is the event handler for Round start events (before people are spawned in)
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerRoundEnd.OnRoundEnd(Smod2.Events.RoundEndEvent)">
+            <summary>  
+             This is the event handler for Round end events (when the stats appear on screen)
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerConnect.OnConnect(Smod2.Events.ConnectEvent)">
+            <summary>  
+             This is the event handler for connection events, before players have been created, so names and what not are available. See PlayerJoin if you need that information
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerDisconnect.OnDisconnect(Smod2.Events.DisconnectEvent)">
+            <summary>  
+             This is the event handler for disconnection events.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerLateDisconnect.OnLateDisconnect(Smod2.Events.LateDisconnectEvent)">
+            <summary>  
+             This is the event handler for disconnection events after the player has disconnected.
+            </summary>
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerPlayerLeave.OnPlayerLeave(Smod2.Events.PlayerLeaveEvent)">
+            <summary>  
+             Called OnDestroy of QueryProcessor aka when a player leaves.
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerCheckRoundEnd.OnCheckRoundEnd(Smod2.Events.CheckRoundEndEvent)">
+            <summary>  
+             This event handler will call everytime the game checks for a round end
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerWaitingForPlayers.OnWaitingForPlayers(Smod2.Events.WaitingForPlayersEvent)">
+            <summary>  
+             This event handler will call when the server is waiting for players
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerRoundRestart.OnRoundRestart(Smod2.Events.RoundRestartEvent)">
+            <summary>  
+             This event handler will call when the server is about to restart
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSetServerName.OnSetServerName(Smod2.Events.SetServerNameEvent)">
+            <summary>  
+             This event handler will call when the server name is set
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerUpdate.OnUpdate(Smod2.Events.UpdateEvent)">
+            <summary>  
+             This event handler will call every server tick
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerFixedUpdate.OnFixedUpdate(Smod2.Events.FixedUpdateEvent)">
+            <summary>  
+             This event handler will call every server tick at a fixed rate (0.02)
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerLateUpdate.OnLateUpdate(Smod2.Events.LateUpdateEvent)">
+            <summary>  
+             This event handler will call after OnUpdate
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSceneChanged.OnSceneChanged(Smod2.Events.SceneChangedEvent)">
+            <summary>  
+             This event handler will call when the server scene changes
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSetSeed.OnSetSeed(Smod2.Events.SetSeedEvent)">
+            <summary>  
+             This event handler will call when the seed for the round is being set
+            </summary> 
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerDecideTeamRespawnQueue.OnDecideTeamRespawnQueue(Smod2.EventSystem.Events.DecideRespawnQueueEvent)">
+            <summary>  
+            Called at the start, when the team respawn queue is being read. This happens BEFORE it fills it to full with filler_team_id.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerTeamRespawn.OnTeamRespawn(Smod2.EventSystem.Events.TeamRespawnEvent)">
+            <summary>  
+            Called before MTF or CI respawn.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSetRoleMaxHP.OnSetRoleMaxHP(Smod2.EventSystem.Events.SetRoleMaxHPEvent)">
+            <summary>  
+            Called when the max HP of each role is being set. This happens every round.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSetSCPConfig.OnSetSCPConfig(Smod2.EventSystem.Events.SetSCPConfigEvent)">
+            <summary>  
+            Called when the configs of SCPs are being set. This happens every round.
+            </summary>  
+        </member>
+        <member name="M:Smod2.EventHandlers.IEventHandlerSetNTFUnitName.OnSetNTFUnitName(Smod2.EventSystem.Events.SetNTFUnitNameEvent)">
+            <summary>  
+            Called when the name of NTF unit is about to be set. This happens when NTF units respawn.
+            </summary>  
+        </member>
+        <member name="M:Smod2.Permissions.IPermissionsHandler.CheckPermission(Smod2.API.Player,System.String)">
+            <summary>
+            Queries a plugin for player permissions.
+            </summary>
+            <param name="player">The player to check the permission of.</param>
+            <param name="permissionName">The name of the permission to check.</param>
+            <returns>
+            -1 for negative permission. (Stops other handlers from allowing it)
+            0 for no permission.
+            1 for positive permission.
+            </returns>
+        </member>
+    </members>
+</doc>

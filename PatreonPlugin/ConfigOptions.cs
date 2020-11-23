@@ -1,4 +1,6 @@
-﻿namespace Dankrushen.PatreonPlugin
+﻿using GameCore;
+
+namespace Dankrushen.PatreonPlugin
 {
 	public static class ConfigOptions
 	{
